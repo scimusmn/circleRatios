@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<title>Circle Ratios</title>
+	<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+	<video id="cam" autoplay></video>
+	<canvas id="main" width="500" height="500"> </canvas>
+	<div class="body">
+		<div class="buttons">
+			<a href="#" class="button green" id="startbtn" >Start cam</a>&nbsp;
+	    	<a href="#" class="button red" id="stopbtn" style="display:none;">Stop cam</a>
+		</div>
+
+		<div id="asciiContainer">
+			<!-- The ascii art comes in the pre tag below -->
+			<video id="cam" autoplay></video>
+			<pre id="asciiText"></pre>
+			
+		</div>
+	</div>
+
+	<script src="smm_utils.js"></script>
+	<script src="pixelGroup_floodFill.js"></script>
+	<script src="brightDetect.js"></script>
+	
+</body>
+</html>
