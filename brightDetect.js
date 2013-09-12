@@ -73,7 +73,9 @@
         };
       }
 
-	var track = new groupTracker();
+	//var track = new groupTracker();
+	var track = new pointTracker();
+	var grabBG =false;
     
     app.loop = function () {
 		var r, g, b, gray;
@@ -90,7 +92,7 @@
 		
 		ctx.fillStyle="#fff";
         ctx.fillRect(mousePos.x,mousePos.y,20,20);
-		ctx.fillRect(60,60,20,20);
+		ctx.fillRect(0,0,2,2);
 		ctx.fillRect(80,40,20,40);
 
 		//accessing pixel data
@@ -111,7 +113,7 @@
 			
 			colordata[i] = colordata[i+1] = colordata[i+2] = gray;
 		}
-		ctx.clearRect (0, 0, width, height);
+		ctx.clearRect (0, 0, canvas.width, canvas.height);
 		
 		
 		/*var pxlGrps = new pixelGroups();
@@ -137,9 +139,9 @@
 		var pxlGrps = new pixelGroups();
 		pxlGrps.makeGroups(pixels);
 		
-		ctx.putImageData(pixels,0,0);
+		//ctx.putImageData(pixels,0,0);
 		
-		track.trackGroups(pxlGrps.groups);
+		if(grabBG) track.acquireBG(pxlGrps.groups),grabBG=false,console.log("hello");
 		
 		/*for(var i= 0; i< pxlGrps.groups.length; i++){
 			var grp = pxlGrps.groups[i];
@@ -150,16 +152,37 @@
 			ctx.fill();
 		}*/
 		
-		for(var i= 0; i< track.tracked.length; i++){
+		//track.trackGroups(pxlGrps.groups);
+		
+		/*for(var i= 0; i< track.tracked.length; i++){
 			var grp = track.tracked[i];
 			ctx.fillStyle="rgb("+(i%2*100+150)+","+(i%3*50+150)+","+(i%4*33+150)+")";
 			ctx.beginPath();
 			ctx.arc(grp.center.x,grp.center.y,10,0,2*Math.PI);
 			ctx.fill();
+		}*/
+		
+		track.findPoint(pxlGrps.groups);
+		
+		if(track.point){
+			ctx.fillStyle="#f00";
+			ctx.beginPath();
+			ctx.arc(3*(width-track.point.x),3*track.point.y,10,0,2*Math.PI);
+			ctx.fill();
 		}
     };
+	
+	document.onkeydown = function(e) {
+		switch (e.which) {
+			// key code for left arrow
+			case 37:
+				grabBG=true;
+				break;
+		}
+	}
     
     app.init();
     app.startCam();
 
 }(window.asciitest = window.asciitest || {}));
+

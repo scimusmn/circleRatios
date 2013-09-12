@@ -99,22 +99,6 @@ function pixelGroups(){
 	}
 }
 
-function distance(p1,p2){
-	return Math.sqrt(Math.pow((p2.x-p1.x),2)+Math.pow((p2.y-p1.y),2));
-}
-
-Array.prototype.min = function(){
-	return Math.min.apply({},this);
-}
-
-Array.prototype.max = function(){
-	return Math.max.apply({},this);
-}
-
-Array.prototype.last = function(){
-	return this[this.length-1];
-}
-
 function groupTracker(){
 	var self = this;
 	this.tracked=[];
@@ -141,10 +125,56 @@ function groupTracker(){
 					if(!replaced[i]){
 						self.tracked.splice(i,1);
 						replaced.splice(i,1);
+						i--;
 					}
 				}
 			}
 			
+		}
+	}
+}
+
+function pointTracker(){
+	var self = this;
+	var bgPoints = [];
+	this.point = null;
+	
+	this.acquireBG = function(newGroups){
+		bgPoints = newGroups;
+	}
+	
+	this.findPoint = function(newGroups){
+		if(bgPoints){
+			var cut = [newGroups.length];
+			var left = newGroups.length;
+			for(var i=0; i<bgPoints.length; i++){
+				var dists = [];
+				for(var j=0; j<newGroups.length; j++){
+					dists.push(distance(bgPoints[i].center,newGroups[j].center));
+				}
+				
+				var closest= -1;
+				if(dists.min()<10) closest = dists.indexOf(dists.min());
+				//if(!used[closest]) self.tracked[i] = newGroups[closest],replaced[i]=true;
+				//used[closest]=true;
+				if(closest>-1) cut[closest]=true,left--;
+			}
+			if(left){
+				//console.log("new point!");
+				var average = {x:0,y:0};
+				for(var i=newGroups.length; i--;){
+					if(!cut[i]){
+						average.x+=newGroups[i].center.x;
+						average.y+=newGroups[i].center.y;
+					}
+				}
+				average.x/=left;
+				average.y/=left;
+				self.point = average;
+				
+				console.log(average.x+" "+average.y);
+			}
+			else self.point = null;
 		}
 	}
 }

@@ -36,3 +36,19 @@ function extractNumber(value)
 	
     return n == null || isNaN(n) ? 0 : n;
 }
+
+function distance(p1,p2){
+	return Math.sqrt(Math.pow((p2.x-p1.x),2)+Math.pow((p2.y-p1.y),2));
+}
+
+Array.prototype.min = function(){
+	return Math.min.apply({},this);
+}
+
+Array.prototype.max = function(){
+	return Math.max.apply({},this);
+}
+
+Array.prototype.last = function(){
+	return this[this.length-1];
+}
