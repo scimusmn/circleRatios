@@ -4,28 +4,23 @@
 	<meta charset="utf-8">
 	<title>Circle Ratios</title>
 	<link rel="stylesheet" href="style.css" />
+	<script>
+		var windowResize = function(){
+			console.log("test test");
+			$("trace").width = window.innerWidth-10;
+			$("trace").height = window.innerHeight-10;
+		}
+	</script>
 </head>
-<body>
+<body onresize="windowResize()">
 	<video id="cam" autoplay></video>
-	<canvas id="main" width="1280" height="800"> </canvas>
+	<canvas id="main" width="600" height="600"> </canvas>
 	<canvas id="trace" width="1920" height="1200"> </canvas>
-	<div class="body" style="display:none;">
-		<div class="buttons">
-			<a href="#" class="button green" id="startbtn" >Start cam</a>&nbsp;
-	    	<a href="#" class="button red" id="stopbtn" style="display:none;">Stop cam</a>
-		</div>
-
-		<div id="asciiContainer">
-			<!-- The ascii art comes in the pre tag below -->
-			<video id="cam" autoplay></video>
-			<pre id="asciiText"></pre>
-			
-		</div>
-	</div>
-
+	
+</body>
+<footer>
 	<script src="smm_utils.js"></script>
 	<script src="pixelGroups.js"></script>
 	<script src="brightDetect.js"></script>
-	
-</body>
+</footer>
 </html>

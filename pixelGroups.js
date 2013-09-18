@@ -140,6 +140,8 @@ function pointTracker(){
 	var bgPoints = [];
 	this.point = null;
 	
+	var minPtSz =10;
+	
 	this.acquireBG = function(newGroups){
 		bgPoints = newGroups;
 	}
@@ -147,12 +149,11 @@ function pointTracker(){
 	this.findPoint = function(newGroups){
 		if(bgPoints){
 			var cut = [newGroups.length];
-			var left = newGroups.length;
+			var left = newGroups.length-1;							//not sure why I need to subtract 1, but I do.
 			for(var i=0; i<bgPoints.length; i++){
 				var dists = [];
-				if(bgPoints[i].pixels.length>4)
 				for(var j=0; j<newGroups.length; j++){
-					if(distance(bgPoints[i].center,newGroups[j].center)<25||newGroups[j].pixels.length<3){
+					if(cut[j]===undefined&&(distance(bgPoints[i].center,newGroups[j].center)<25||newGroups[j].pixels.length<minPtSz)){
 						cut[j]=true,left--;
 						if(self.point&&distance(self.point,newGroups[j].center)<=25&&newGroups[j].pixels.length>3){
 							cut[j]=undefined,left++;
@@ -160,7 +161,6 @@ function pointTracker(){
 					}
 				}
 			}
-			console.log(left);
 			if(left>0){
 				var average = {x:0,y:0};
 				for(var i=newGroups.length; i--;){
@@ -179,25 +179,13 @@ function pointTracker(){
 	}
 }
 
-/*function getControlPoints(x0,y0,x1,y1,x2,y2,t){
-    var d01=Math.sqrt(Math.pow(x1-x0,2)+Math.pow(y1-y0,2));
-    var d12=Math.sqrt(Math.pow(x2-x1,2)+Math.pow(y2-y1,2));
-    var fa=t*d01/(d01+d12);   // scaling factor for triangle Ta
-    var fb=t*d12/(d01+d12);   // ditto for Tb, simplifies to fb=t-fa
-    var p1x=x1-fa*(x2-x0);    // x2-x0 is the width of triangle T
-    var p1y=y1-fa*(y2-y0);    // y2-y0 is the height of T
-    var p2x=x1+fb*(x2-x0);
-    var p2y=y1+fb*(y2-y0);  
-    return {p1:{x:p1x,y:p1y},p2:{x:p2x,y:p2y}};
-}*/
-
 function pointTrace(){
 	var self = this;
 	this.points = [];
 	var maxPoints = 10;
 	var trcWd =6;
 	
-	var canvas = $("main");
+	var canvas = $("trace");
 	var ctx = canvas.getContext("2d");
 	
 	this.addPoint = function(pnt){
@@ -226,23 +214,9 @@ function pointTrace(){
 				xc = (self.points[i].x + self.points[i + 1].x) / 2;
 				yc = (self.points[i].y + self.points[i + 1].y) / 2;
 				
-				/*******
-				var p=self.points[i-1];
-				var c=self.points[i];
-				var n = self.points[i+1];
-				contPt.push(getControlPoints(p.x,p.y,c.x,c.y,n.x,n.y,.5));
-				*******/
 				
 				ctx.quadraticCurveTo(self.points[i].x, self.points[i].y, xc, yc);
 			}
-			
-			/********
-			var pnts = self.points;
-			//ctx.quadraticCurveTo(pnts[1].x, pnts[1].y, contPt[0].p1.x,contPt[0].p1.y);
-			for(var i=2; i<pnts.length-3; i++){
-				ctx.bezierCurveTo(pnts[i].x,pnts[i].y,contPt[i].p2.x,contPt[i].p2.y,contPt[i+1].p1.x,contPt[i+1].p1.y);
-			}
-			********/
 			
 			// curve through the last two points
 			var i = self.points.length-2;

@@ -8,19 +8,14 @@
     app.init = function () {
 		//Get all the page element we need
         cam = document.getElementById('cam');
-        ascii = document.getElementById("asciiText");
 		canvas = document.getElementById("main");
 		ctx = canvas.getContext("2d");
-		btnStart = document.getElementById('startbtn');
-        btnStop = document.getElementById('stopbtn');
-        
-        //Init events
-        btnStart.addEventListener('click',app.startCam);
-        btnStop.addEventListener('click',app.stopCam);
 		
 		canvas.addEventListener('mousemove', function(evt) {
 			mousePos = getMousePos(canvas, evt);
 		}, false);
+		
+		setTimeout(app.grabBackground,500);
     };
 
     app.startCam = function (e) {
@@ -39,8 +34,6 @@
 					}
 					cam.play();
 					intervalId = setInterval(app.loop, loopSpeed);
-					btnStart.style.display = "none";
-					btnStop.style.display = "inline-block";
 				},
 				function errorCallback(error) {
 					alert("An error ocurred getting user media. Code:" + error.code);
@@ -59,8 +52,6 @@
 		clearInterval(intervalId);
 		cam.src = "";
 		e.preventDefault();
-		btnStop.style.display = "none";
-		btnStart.style.display = "inline-block";
     };
 	
 	var mousePos = {x:0,y:0};
@@ -89,15 +80,9 @@
 		//draw the video frame
 		ctx.drawImage(cam, width, 0, -width, height);
 		
-		//ctx.fillStyle="#000";
-        //ctx.fillRect(0,0,canvas.width,canvas.height);
-		
-		ctx.fillStyle="#fff";
+		ctx.fillStyle="#fff";								//Need this dot at the top,
+        ctx.fillRect(width/2,0,1,1);					//else, the groups don't record, I guess.
         
-        ctx.fillRect(0,0,2,2);
-        
-		//ctx.fillRect(80,40,20,40);
-
 		//accessing pixel data
 		var pixels = ctx.getImageData(0, 0, width, height);
 		var colordata = pixels.data;
@@ -149,45 +134,23 @@
 		if(grabBG) track.acquireBG(pxlGrps.groups),grabBG=false,console.log("hello");
 		
 		
-		/*for(var i= 0; i< pxlGrps.groups.length; i++){
-			var grp = pxlGrps.groups[i];
-			var pix = grp.pixels;
-			ctx.fillStyle="rgb("+(i%2*100+150)+","+(i%3*50+150)+","+(i%4*33+150)+")";
-			ctx.beginPath();
-			ctx.arc(grp.center.x,grp.center.y,10,0,2*Math.PI);
-			ctx.fill();
-		}*/
-		
-		//track.trackGroups(pxlGrps.groups);
-		
-		/*for(var i= 0; i< track.tracked.length; i++){
-			var grp = track.tracked[i];
-			ctx.fillStyle="rgb("+(i%2*100+150)+","+(i%3*50+150)+","+(i%4*33+150)+")";
-			ctx.beginPath();
-			ctx.arc(grp.center.x,grp.center.y,10,0,2*Math.PI);
-			ctx.fill();
-		}*/
 		
 		track.findPoint(pxlGrps.groups);
-		//ctx.putImageData(pixels,0,0);
-		
-		//var pnt = averageWhitePos(pixels);
 		
 		if(track.point!==null){
 			trace.addPoint({x:track.point.x/width,y:track.point.y/height});
 		}
-		else{
-			trace.jump();
-		}
+		else trace.jump();
 		
-		//if(pnt.x||pnt.y){
-			//trace.addPoint({x:pnt.x*3,y:pnt.y*3});
-		//}
 		
 		trace.draw(0,0);
 		
 		
     };
+    
+    app.grabBackground = function(){
+    	grabBG=true;
+    }
 	
 	document.onkeydown = function(e) {
 		switch (e.which) {
