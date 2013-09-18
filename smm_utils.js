@@ -17,6 +17,10 @@ var $ = function( id ) {
 
 };
 
+var charCode = function(string){
+	return string.charCodeAt(0);
+}
+
 function sign(x) {
     return (x > 0) - (x < 0);
 }

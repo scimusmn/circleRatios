@@ -1,7 +1,7 @@
 (function (app) {
 	var cam, intervalId, canvas, ctx, ascii, btnStart, btnStop;
 
-	var loopSpeed = 10;
+	var loopSpeed = 5;
 	var width = 320;
 	var height = 240;
 
@@ -75,7 +75,9 @@
 
 	//var track = new groupTracker();
 	var track = new pointTracker();
+	var trace = new pointTrace();
 	var grabBG =false;
+	var clearScreen=false;
     
     app.loop = function () {
 		var r, g, b, gray;
@@ -85,15 +87,16 @@
 		ctx.clearRect (0, 0, width, height);
 
 		//draw the video frame
-		ctx.drawImage(cam, 0, 0, width, height);
+		ctx.drawImage(cam, width, 0, -width, height);
 		
 		//ctx.fillStyle="#000";
         //ctx.fillRect(0,0,canvas.width,canvas.height);
 		
 		ctx.fillStyle="#fff";
-        ctx.fillRect(mousePos.x,mousePos.y,20,20);
-		ctx.fillRect(0,0,2,2);
-		ctx.fillRect(80,40,20,40);
+        
+        ctx.fillRect(0,0,2,2);
+        
+		//ctx.fillRect(80,40,20,40);
 
 		//accessing pixel data
 		var pixels = ctx.getImageData(0, 0, width, height);
@@ -113,6 +116,7 @@
 			
 			colordata[i] = colordata[i+1] = colordata[i+2] = gray;
 		}
+		
 		ctx.clearRect (0, 0, canvas.width, canvas.height);
 		
 		
@@ -136,12 +140,14 @@
 			}
 		}*/
 		
+		
 		var pxlGrps = new pixelGroups();
 		pxlGrps.makeGroups(pixels);
 		
-		//ctx.putImageData(pixels,0,0);
+		ctx.putImageData(pixels,0,0);
 		
 		if(grabBG) track.acquireBG(pxlGrps.groups),grabBG=false,console.log("hello");
+		
 		
 		/*for(var i= 0; i< pxlGrps.groups.length; i++){
 			var grp = pxlGrps.groups[i];
@@ -163,13 +169,24 @@
 		}*/
 		
 		track.findPoint(pxlGrps.groups);
+		//ctx.putImageData(pixels,0,0);
 		
-		if(track.point){
-			ctx.fillStyle="#f00";
-			ctx.beginPath();
-			ctx.arc(3*(width-track.point.x),3*track.point.y,10,0,2*Math.PI);
-			ctx.fill();
+		//var pnt = averageWhitePos(pixels);
+		
+		if(track.point!==null){
+			trace.addPoint({x:track.point.x/width,y:track.point.y/height});
 		}
+		else{
+			trace.jump();
+		}
+		
+		//if(pnt.x||pnt.y){
+			//trace.addPoint({x:pnt.x*3,y:pnt.y*3});
+		//}
+		
+		trace.draw(0,0);
+		
+		
     };
 	
 	document.onkeydown = function(e) {
@@ -178,6 +195,18 @@
 			case 37:
 				grabBG=true;
 				break;
+			case charCode('A'):
+				trace.clear();
+				break;
+			case charCode('R'):
+				trace.color="#d00";
+				break;
+			case charCode('G'):
+				trace.color="#3b0";
+				break;
+			case charCode('B'):
+				trace.color="#50f";
+				break;
 		}
 	}
     
@@ -185,4 +214,3 @@
     app.startCam();
 
 }(window.asciitest = window.asciitest || {}));
-

@@ -44,6 +44,12 @@ div.body {
 	text-align: right;
 }
 
+#main{
+	position: fixed;
+	top: 0;
+  	left: 0;
+}
+
 #cam {
   position: static;
   top: 0;
