@@ -2,25 +2,69 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Circle Ratios</title>
+	<title>Movie Ratios</title>
 	<link rel="stylesheet" href="style.css" />
-	<script>
-		var windowResize = function(){
-			console.log("test test");
-			$("trace").width = window.innerWidth-10;
-			$("trace").height = window.innerHeight-10;
-		}
-	</script>
 </head>
-<body onresize="windowResize()">
-	<video id="cam" autoplay></video>
-	<canvas id="main" width="600" height="600"> </canvas>
-	<canvas id="trace" width="1920" height="1200"> </canvas>
+<body>
+	<canvas id="bgImg" width="640" height="480"></canvas>
+	<div id="titleBar">Movie Ratios</div>
+	<div id="captureCont">
+		<div id="lastDiv">
+			<canvas id="lastFrame" width="640" height="480"> </canvas>
+			<p class="blueText">Last image</p>
+			<p class="redText">Imagen anterior</p>
+		</div>
+		<div id="liveDiv">
+			<canvas id="live" width="640" height="480"> </canvas>
+			<p class="blueText">Current view</p>
+			<p class="redText">Vista actual</p>
+		</div>
+		<div class="stretch" style="height:50px"></div>
+	</div>
+	<div id="playbackCont" style="display:none">
+		<canvas id="plyBk" width="640" height="480"> </canvas>
+		<div class="stretch"></div>
+	</div>
+	<div class="infoDiv">
+		<p id="numFrames" class="redText">0 total frames</p>
+	</div>
+	<div class="centerDiv">
+		<canvas id="strip" width="640" height="480"></canvas>
+	</div>
+	<div class="infoDiv">
+		<div class="halfStretch">
+			<p class="blueText">Playback rate:</p>
+			<p id="fps" class="redText">2 frames per second</p>
+		</div>
+	</div>
 	
+	<div id="delOverlay" class="overlay">
+		<div class="floater"></div>
+		<div class="roundedBox">
+			<p class="blueText">Are you sure you want to delete this movie?</p>
+			<p class="redText">Press 'RESET' again to confirm</p>
+			<p class="redText">Press any other button to cancel</p>
+		</div>
+		<div class="stretch"></div>
+	</div>
+	<div id="playOverlay" class="overlay">
+		<div class="floater"></div>
+		<div class="roundedBox">
+			<p class="blueText">Press 'PLAY' again to replay</p>
+			<p class="redText">Press any other button to return to the capture screen</p>
+		</div>
+		<div class="stretch"></div>
+	</div>
 </body>
 <footer>
-	<script src="smm_utils.js"></script>
-	<script src="pixelGroups.js"></script>
-	<script src="brightDetect.js"></script>
+	<script src="src/smm_utils.js"></script>
+	<script src="src/smm_canvas.js"></script>
+	<script src="src/camera.js"></script>
+	<script src="src/flipBookPixels.js"></script>
+	<script src="src/playback.js"></script>
+	<script src="src/bgCanvas.js"></script>
+	<script src="src/overlayDiv.js"></script>
+	<script src="src/frameCanvas.js"></script>
+	<script src="src/interface.js"></script>
 </footer>
 </html>
