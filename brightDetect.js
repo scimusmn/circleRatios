@@ -78,8 +78,12 @@
 		ctx.clearRect (0, 0, width, height);
 
 		//draw the video frame
-		ctx.drawImage(cam, width, 0, -width, height);
-		
+        ctx.save();
+        ctx.translate(width, 0);
+        ctx.scale(-1, 1);
+		ctx.drawImage(cam, 0, 0, width, height);
+		ctx.restore();
+        
 		ctx.fillStyle="#fff";								//Need this dot at the top,
         ctx.fillRect(width/2,0,1,1);					//else, the groups don't record, I guess.
         
@@ -105,27 +109,6 @@
 		ctx.clearRect (0, 0, canvas.width, canvas.height);
 		
 		
-		/*var pxlGrps = new pixelGroups();
-		pxlGrps.extractBlobs(pixels);
-		
-		
-		for(var i= 0; i< pxlGrps.blobs.length; i++){
-			var grp = pxlGrps.blobs[i];
-			ctx.fillStyle="#f00";
-			ctx.beginPath();
-			ctx.arc(grp.center().x,grp.center().y,10,0,2*Math.PI);
-			ctx.fill();
-			/*for(var j=0; j<grp.pixels.length; j++){
-				var pix = grp.pixels[j];
-				if(pix.edge){
-					colordata[pix.index] = 255;
-					colordata[pix.index+1] = colordata[pix.index+2] = 0;
-				}
-				//else colordata[pix.index] = colordata[pix.index+1] = colordata[pix.index+2] = 0;
-			}
-		}*/
-		
-		
 		var pxlGrps = new pixelGroups();
 		pxlGrps.makeGroups(pixels);
 		
@@ -138,7 +121,7 @@
 		track.findPoint(pxlGrps.groups);
 		
 		if(track.point!==null){
-			trace.addPoint({x:track.point.x/width,y:track.point.y/height});
+			trace.addPoint({x:track.point.x/width,y:(track.point.y-50)/(height-75)});
 		}
 		else trace.jump();
 		
@@ -158,7 +141,7 @@
 			case 37:
 				grabBG=true;
 				break;
-			case charCode('A'):
+			case charCode(' '):
 				trace.clear();
 				break;
 			case charCode('R'):
