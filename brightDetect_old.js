@@ -4,11 +4,6 @@
 	var loopSpeed = 5;
 	var width = 320;
 	var height = 240;
-	
-	var track = new pointTracker();
-	var trace = new pointTrace();
-	var grabBG =false;
-	var clearScreen=false;
 
     app.init = function () {
 		//Get all the page element we need
@@ -20,7 +15,7 @@
 			mousePos = getMousePos(canvas, evt);
 		}, false);
 		
-		setTimeout(app.grabBackground,5000);
+		setTimeout(app.grabBackground,500);
     };
 
     app.startCam = function (e) {
@@ -68,6 +63,12 @@
           y: evt.clientY - rect.top
         };
       }
+
+	//var track = new groupTracker();
+	var track = new pointTracker();
+	var trace = new pointTrace();
+	var grabBG =false;
+	var clearScreen=false;
     
     app.loop = function () {
 		var r, g, b, gray;
@@ -77,29 +78,34 @@
 		ctx.clearRect (0, 0, width, height);
 
 		//draw the video frame
+<<<<<<< HEAD
         ctx.save();
         ctx.translate(width, 0);
         ctx.scale(-1, 1);
 		ctx.drawImage(cam, 0, 0, width, height);
 		ctx.restore();
         
+=======
+		ctx.drawImage(cam, width, 0, -width, height);
+		
+>>>>>>> parent of eb6a01a... Resyncing from MBP
 		ctx.fillStyle="#fff";								//Need this dot at the top,
         ctx.fillRect(width/2,0,1,1);					//else, the groups don't record, I guess.
         
 		//accessing pixel data
-		var pixels = ctx.getImageData(0, 0, width, height);		//
+		var pixels = ctx.getImageData(0, 0, width, height);
 		var colordata = pixels.data;
 		
 		
 
-		for(var i = 0; i < colordata.length; i +=4){			//threshold the image
+		for(var i = 0; i < colordata.length; i +=4){
 			r = colordata[i];
 			g = colordata[i+1];
 			b = colordata[i+2];
 			//converting the pixel into grayscale
 			gray = (r+g+b)/3//r*0.2126 + g*0.7152 + b*0.0722;
 			
-			if(gray<200) gray = 0;								//below 200 is black
+			if(gray<200) gray = 0;
 			else gray = 255;
 			
 			colordata[i] = colordata[i+1] = colordata[i+2] = gray;
@@ -108,6 +114,30 @@
 		ctx.clearRect (0, 0, canvas.width, canvas.height);
 		
 		
+<<<<<<< HEAD
+=======
+		/*var pxlGrps = new pixelGroups();
+		pxlGrps.extractBlobs(pixels);
+		
+		
+		for(var i= 0; i< pxlGrps.blobs.length; i++){
+			var grp = pxlGrps.blobs[i];
+			ctx.fillStyle="#f00";
+			ctx.beginPath();
+			ctx.arc(grp.center().x,grp.center().y,10,0,2*Math.PI);
+			ctx.fill();
+			/*for(var j=0; j<grp.pixels.length; j++){
+				var pix = grp.pixels[j];
+				if(pix.edge){
+					colordata[pix.index] = 255;
+					colordata[pix.index+1] = colordata[pix.index+2] = 0;
+				}
+				//else colordata[pix.index] = colordata[pix.index+1] = colordata[pix.index+2] = 0;
+			}
+		}*/
+		
+		
+>>>>>>> parent of eb6a01a... Resyncing from MBP
 		var pxlGrps = new pixelGroups();
 		pxlGrps.makeGroups(pixels);
 		
@@ -120,7 +150,11 @@
 		track.findPoint(pxlGrps.groups);
 		
 		if(track.point!==null){
-			trace.addPoint({x:track.point.x/width,y:(track.point.y-40)/(height-55)});
+<<<<<<< HEAD
+			trace.addPoint({x:track.point.x/width,y:(track.point.y-50)/(height-75)});
+=======
+			trace.addPoint({x:track.point.x/width,y:track.point.y/height});
+>>>>>>> parent of eb6a01a... Resyncing from MBP
 		}
 		else trace.jump();
 		
@@ -132,7 +166,6 @@
     
     app.grabBackground = function(){
     	grabBG=true;
-	console.log("easy bg grab ");
     }
 	
 	document.onkeydown = function(e) {
@@ -141,7 +174,11 @@
 			case 37:
 				grabBG=true;
 				break;
+<<<<<<< HEAD
 			case charCode(' '):
+=======
+			case charCode('A'):
+>>>>>>> parent of eb6a01a... Resyncing from MBP
 				trace.clear();
 				break;
 			case charCode('R'):
