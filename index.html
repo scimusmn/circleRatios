@@ -2,24 +2,24 @@
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Movie Ratios</title>
+	<title>Circle Ratios</title>
 	<link rel="stylesheet" href="style.css" />
+	<script>
+		var windowResize = function(){
+			console.log("test test");
+			$("trace").width = window.innerWidth-10;
+			$("trace").height = window.innerHeight-10;
+		}
+	</script>
 </head>
 <body onresize="windowResize()">
 	<video id="cam" autoplay></video>
 	<canvas id="main" width="600" height="600"> </canvas>
 	<canvas id="trace" width="2560" height="1440"> </canvas>
-
 </body>
 <footer>
-	<script src="src/smm_utils.js"></script>
-	<script src="src/smm_canvas.js"></script>
-	<script src="src/camera.js"></script>
-	<script src="src/flipBookPixels.js"></script>
-	<script src="src/playback.js"></script>
-	<script src="src/bgCanvas.js"></script>
-	<script src="src/overlayDiv.js"></script>
-	<script src="src/frameCanvas.js"></script>
-	<script src="src/interface.js"></script>
+	<script src="smm_utils.js"></script>
+	<script src="pixelGroups.js"></script>
+	<script src="brightDetect.js"></script>
 </footer>
 </html>
