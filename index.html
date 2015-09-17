@@ -4,24 +4,12 @@
 	<meta charset="utf-8">
 	<title>Circle Ratios</title>
 	<link rel="stylesheet" href="style.css" />
-	<script>
-		var windowResize = function(){
-			console.log("test test");
-			$("trace").width = window.innerWidth-10;
-			$("trace").height = window.innerHeight-10;
-		}
-	</script>
+	<script src="src/smmInclude.js" main="src/app.js"></script>
 </head>
-<body onresize="windowResize()">
+<body>
 	<video id="cam" autoplay></video>  <!--the video frame for the webcam-->
 	<canvas id="main" width="600" height="600"> </canvas> <!-- where the video is drawn to
-															 find bright spots, not displayed--> 
-	<canvas id="trace" width="2550" height="1430"> </canvas> <!-- where the trace is drawn on screen-->
-	
+															 find bright spots, not displayed-->
+	<canvas is="smm-graph" id="trace" numPoints="10"></canvas>
 </body>
-<footer>
-	<script src="src/smm_utils.js"></script>
-	<script src="src/pixelGroups.js"></script>
-	<script src="src/brightDetect.js"></script>
-</footer>
 </html>
