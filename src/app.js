@@ -68,9 +68,13 @@ include(['src/smm_config.js', 'src/webcam.js', 'src/pixelGroups.js', 'src/smm_gr
     //accessing pixel data
     var X = Math.floor(width * µ('config-file').minX);
     var Y = Math.floor(height * µ('config-file').minY);
-    var wid = Math.floor(width * µ('config-file').maxX);
-    var hgt = Math.floor(height * µ('config-file').maxY);
-    var pixels = ctx.getImageData(X, Y, wid, hgt);    //
+    var WID = Math.floor(width * µ('config-file').maxX) - X;
+    var HGT = Math.floor(height * µ('config-file').maxY) - Y;
+
+    ctx.fillStyle = '#fff';                //Need this dot at the top,
+    ctx.fillRect(X + WID / 2, Y, 1, 1);
+
+    var pixels = ctx.getImageData(X, Y, WID, HGT);    //
     var colordata = pixels.data;
 
     for (var i = 0; i < colordata.length; i += 4) {      //threshold the image
@@ -99,7 +103,7 @@ include(['src/smm_config.js', 'src/webcam.js', 'src/pixelGroups.js', 'src/smm_gr
     track.findPoint(pxlGrps.groups);
 
     if (track.point !== null) {
-      trace.addPoint({x:track.point.x / width, y:(track.point.y - 40) / (height - 55)});
+      trace.addPoint({x:track.point.x / WID, y:(track.point.y) / (HGT)});
     } else trace.clear();
 
     trace.draw();
@@ -113,6 +117,9 @@ include(['src/smm_config.js', 'src/webcam.js', 'src/pixelGroups.js', 'src/smm_gr
   document.onkeydown = function(e) {
     switch (e.which) {
       // key code for left arrow
+      case charCode('P'):
+        console.log(trace.lastPoint());
+        break;
       case 37:
         grabBG = true;
         break;
