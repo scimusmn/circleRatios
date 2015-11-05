@@ -1,4 +1,4 @@
-include(['src/webcam.js', 'src/pixelGroups.js', 'src/smm_graph.js'], function() {
+include(['src/smm_config.js', 'src/webcam.js', 'src/pixelGroups.js', 'src/smm_graph.js'], function() {
   function app() {};
 
   var intervalId;
@@ -13,7 +13,7 @@ include(['src/webcam.js', 'src/pixelGroups.js', 'src/smm_graph.js'], function() 
 
   var track = new pointTracker();
 
-  var trace  = $('trace');
+  var trace  = µ('#trace');
   trace.lineColor = '#d00';
   trace.lineWidth = 4;
 
@@ -66,7 +66,11 @@ include(['src/webcam.js', 'src/pixelGroups.js', 'src/smm_graph.js'], function() 
     ctx.fillRect(width / 2, 0, 1, 1);          //else, the groups don't record, I guess.
 
     //accessing pixel data
-    var pixels = ctx.getImageData(0, 0, width, height);    //
+    var X = Math.floor(width * µ('config-file').minX);
+    var Y = Math.floor(height * µ('config-file').minY);
+    var wid = Math.floor(width * µ('config-file').maxX);
+    var hgt = Math.floor(height * µ('config-file').maxY);
+    var pixels = ctx.getImageData(X, Y, wid, hgt);    //
     var colordata = pixels.data;
 
     for (var i = 0; i < colordata.length; i += 4) {      //threshold the image
@@ -77,7 +81,7 @@ include(['src/webcam.js', 'src/pixelGroups.js', 'src/smm_graph.js'], function() 
       //converting the pixel into grayscale
       gray = (r + g + b) / 3; //r*0.2126 + g*0.7152 + b*0.0722;
 
-      if (gray < 200) gray = 0;                //below 200 is black
+      if (gray < 10) gray = 0;                //below 200 is black
       else gray = 255;
 
       colordata[i] = colordata[i + 1] = colordata[i + 2] = gray;
@@ -90,12 +94,12 @@ include(['src/webcam.js', 'src/pixelGroups.js', 'src/smm_graph.js'], function() 
 
     ctx.putImageData(pixels, 0, 0);
 
-    if (grabBG) track.acquireBG(pxlGrps.groups),grabBG = false,console.log('hello');
+    if (grabBG) track.acquireBG(pxlGrps.groups), grabBG = false, console.log('hello');
 
     track.findPoint(pxlGrps.groups);
 
     if (track.point !== null) {
-      trace.addPoint({x:track.point.x / width,y:(track.point.y - 40) / (height - 55)});
+      trace.addPoint({x:track.point.x / width, y:(track.point.y - 40) / (height - 55)});
     } else trace.clear();
 
     trace.draw();
@@ -104,7 +108,7 @@ include(['src/webcam.js', 'src/pixelGroups.js', 'src/smm_graph.js'], function() 
 
   app.grabBackground = function() {
     grabBG = true;
-  }
+  };
 
   document.onkeydown = function(e) {
     switch (e.which) {

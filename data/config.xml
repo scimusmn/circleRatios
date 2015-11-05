@@ -1,0 +1,6 @@
+<config>
+  <minX type="num">.11</minX>
+  <minY type="num">.33</minY>
+  <maxX type="num">.85</maxX>
+  <maxY type="num">.93</maxY>
+</config>

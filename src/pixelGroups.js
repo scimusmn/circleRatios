@@ -36,7 +36,7 @@ function pixGroup(wd,hgt) {
       if (y > max.y) max.y = y;
       if (y < min.y) min.y = y;
     }
-		
+
     _this.center = {x:(max.x + min.x) / 2,y:(max.y + min.y) / 2};
   };
 };
@@ -251,13 +251,12 @@ function pointTracker(){
  *    smooth quadratic curves between each point.
  *********************************************/
 
-function pointTrace(){
+function pointTrace(canvas){
   var _this = this;
   this.points = [];      //create the array to store points to trace.
   var maxPoints = 10;      // define the max number of points to trace.
   var trcWd =6;        // define the width of the tracing line.
 
-  var canvas = $("trace");        //link the canvas var to the "trace" canvas element
   var ctx = canvas.getContext("2d");      // get the canvas context.
 
   this.addPoint = function(pnt){

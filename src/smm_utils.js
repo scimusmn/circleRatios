@@ -1,22 +1,21 @@
-var $ = function(id, elem) {
+
+// I've changed this selector function
+// to use 'µ' instead of '$'. '$' is so commonly
+// associated with jquery that it will be confusing
+// for future developers. The change also allows
+// incorporation of jquery without conflicts.
+// -@tnordberg, 10/09/2015
+
+function µ(id, elem) {
   var ret;
   var root = ((elem) ? elem : document);
   var spl = id.split('>');
   switch (spl[0].charAt(0)) {
-    case '#':
-      ret = root.getElementById(spl[0].substr(1));
-      break;
-    case '.':
-      ret = root.getElementsByClassName(spl[0].substr(1))[0];
-      break;
-    case '$':
-      ret = root.getElementsByTagName(spl[0].substr(1))[0];
-      break;
     case '|':
       ret = root;
       break;
     default:
-      ret = root.getElementById(spl[0]);
+      ret = root.querySelector(spl[0]);
       break;
   }
   if (spl.length <= 1) return ret;
@@ -38,12 +37,12 @@ function inheritFrom(parent, addMethods) {
       value: ret,
       enumerable: false,
       writable: true,
-      configurable: true
-    }
+      configurable: true,
+    },
   });
   if (_parent) ret.__proto__ = _parent;
 
-  if(typeof addMethods === 'function')
+  if (typeof addMethods === 'function')
     addMethods.call(ret.prototype);
 
   return ret;
@@ -55,11 +54,29 @@ Function.prototype.inherits = function(parent) {
       value: this,
       enumerable: false,
       writable: true,
-      configurable: true
-    }
+      configurable: true,
+    },
   });
   if (parent) this.__proto__ = parent;
 };
+
+function ajax(src, fxn) {
+  var http = new XMLHttpRequest();
+  var ret = 0;
+
+  http.open('get', src);
+  http.responseType = 'document';
+  http.onreadystatechange = function() {
+    if (http.readyState == 4) {
+      ret = http.responseXML;
+      fxn(ret);
+    }
+  };
+
+  http.send(null);
+
+  return ret;
+}
 
 /***************************************
 these work like this:
@@ -92,9 +109,7 @@ function fociiActions() {
     else return self.addElement(item);
   }
 }
-
 ******************************************/
-
 
 function b64toBlobURL(b64Data, contentType, sliceSize) {
   var parts = b64Data.match(/data:([^;]*)(;base64)?,([0-9A-Za-z+/]+)/);
@@ -123,40 +138,27 @@ function b64toBlobURL(b64Data, contentType, sliceSize) {
 
 var revokeBlobURL = function(URL) {
   window.URL.revokeObjectURL(URL);
-}
+};
 
 var charCode = function(string) {
   return string.charCodeAt(0);
-}
-
-function sign(x) {
-  return (x > 0) - (x < 0);
-}
-
-function constrain(num, a, b) {
-  return num = Math.min(Math.max(num, a), b);
-}
+};
 
 function degToRad(d) {
   // Converts degrees to radians
   return d * 0.0174532925199432957;
 }
 
-function itoa(i) {
+function itoa(i)
+{
   return String.fromCharCode(i);
 }
 
-function extractNumber(value) {
-  var n = parseInt(value);
-
-  return n == null || isNaN(n) ? 0 : n;
-}
-
-function bitRead(num,pos) {
+function bitRead(num, pos) {
   return (num & Math.pow(2, pos)) >> pos;
 }
 
-function distance(p1,p2) {
+function distance(p1, p2) {
   return Math.sqrt(Math.pow((p2.x - p1.x), 2) + Math.pow((p2.y - p1.y), 2));
 }
 
@@ -211,10 +213,27 @@ function map(val,inMin,inMax,outMin,outMax){
   return (val-inMin)*(outMax-outMin)/(inMax-inMin)+outMin;
 }
 
-function trackChange(init){
-  var oldVal = init;
-  this.check = function(val){
-    if(val!==oldVal) return true, oldVal=val;
-    else return false;
+function clamp(val,Min,Max) {
+  with (Math){
+    return max(Min,min(val,Max));
   }
+}
+
+function sign(x) {
+    return (x > 0) - (x < 0);
+}
+
+function zeroPad(num, size) {
+  var s = num+'';
+  while (s.length < size) s = '0' + s;
+  return s;
+}
+
+// Reduce a fraction by finding the Greatest Common Divisor and dividing by it.
+function reduce(numerator,denominator){
+  var gcd = function gcd(a,b){
+    return b ? gcd(b, a%b) : a;
+  };
+  gcd = gcd(numerator,denominator);
+  return [numerator/gcd, denominator/gcd];
 }
