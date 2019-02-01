@@ -1,4 +1,4 @@
-##Installation instructions (OSX 10.9):
+## Installation instructions (OSX 10.9):
 
 
 The application itself is a webapp, written in HTML5 and Javascript, which uses a webcam to track a light moving across the field of view. In order for this app to start up and run properly, a local SSL webserver must be set up and running. To do this, a self-signed SSL key needs to be created, and the native Apache server needs to be configured to allow SSL connections. The Apache server then needs to be set to start on login. An explanation of these steps follows.
